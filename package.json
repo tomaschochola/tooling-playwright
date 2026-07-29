@@ -6,7 +6,7 @@
   },
   "bugs": {
     "email": "tomaschochola@tomaschochola.cz",
-    "url": "https://github.com/tomaschochola/tooling-TODO/issues"
+    "url": "https://github.com/tomaschochola/tooling-playwright/issues"
   },
   "contributors": [
     {
@@ -15,33 +15,50 @@
       "url": "https://github.com/tomaschochola"
     }
   ],
-  "dependencies": {},
-  "description": "@tomaschochola/tooling-TODO",
+  "dependencies": {
+    "@axe-core/playwright": "^4.12.1"
+  },
+  "description": "@tomaschochola/tooling-playwright",
   "devDependencies": {
+    "@playwright/test": "^1.62.0",
     "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#1.x",
-    "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#1.x"
+    "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#1.x",
+    "@tomaschochola/tooling-typescript": "github:tomaschochola/tooling-typescript#1.x"
   },
   "engines": {
     "node": ">=24.11.0 <25.0.0",
     "npm": ">=11.0.0 <12.0.0"
   },
+  "files": [
+    "src"
+  ],
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/tomaschochola"
   },
-  "homepage": "https://github.com/tomaschochola/tooling-TODO",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "homepage": "https://github.com/tomaschochola/tooling-playwright",
   "keywords": [
     "tomaschochola",
     "TomasChochola",
     "Tomas Chochola",
     "Tomáš Chochola",
-    "tooling-TODO"
+    "tooling-playwright"
   ],
   "license": "CC-BY-ND-4.0",
   "main": "./src/index.js",
-  "name": "@tomaschochola/tooling-TODO",
+  "name": "@tomaschochola/tooling-playwright",
   "packageManager": "npm@11.16.0",
-  "repository": "github:tomaschochola/tooling-TODO",
+  "peerDependencies": {
+    "@playwright/test": "^1.62.0"
+  },
+  "repository": "github:tomaschochola/tooling-playwright",
   "sideEffects": false,
-  "type": "module"
+  "type": "module",
+  "types": "./src/index.ts"
 }
