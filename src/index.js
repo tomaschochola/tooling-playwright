@@ -69,49 +69,49 @@ export function createPlaywrightProjects() {
       },
     },
     {
-      name: 'Android Chrome phone portrait (360x732)',
+      name: 'Chromium Pixel 9 emulation portrait (360x732)',
       use: {
         ...devices['Pixel 9'],
       },
     },
     {
-      name: 'Android Chrome phone landscape (756x308)',
+      name: 'Chromium Pixel 9 emulation landscape (756x308)',
       use: {
         ...devices['Pixel 9 landscape'],
       },
     },
     {
-      name: 'iOS Safari phone portrait (375x667)',
+      name: 'WebKit iPhone SE (3rd gen) emulation portrait (375x667)',
       use: {
         ...devices['iPhone SE (3rd gen)'],
       },
     },
     {
-      name: 'iOS Safari phone landscape (667x375)',
+      name: 'WebKit iPhone SE (3rd gen) emulation landscape (667x375)',
       use: {
         ...devices['iPhone SE (3rd gen) landscape'],
       },
     },
     {
-      name: 'Android Chrome tablet portrait (640x1024)',
+      name: 'Chromium Galaxy Tab S9 emulation portrait (640x1024)',
       use: {
         ...devices['Galaxy Tab S9'],
       },
     },
     {
-      name: 'Android Chrome tablet landscape (1024x640)',
+      name: 'Chromium Galaxy Tab S9 emulation landscape (1024x640)',
       use: {
         ...devices['Galaxy Tab S9 landscape'],
       },
     },
     {
-      name: 'iPadOS Safari tablet portrait (768x1024)',
+      name: 'WebKit iPad Mini emulation portrait (768x1024)',
       use: {
         ...devices['iPad Mini'],
       },
     },
     {
-      name: 'iPadOS Safari tablet landscape (1024x768)',
+      name: 'WebKit iPad Mini emulation landscape (1024x768)',
       use: {
         ...devices['iPad Mini landscape'],
       },
@@ -120,9 +120,15 @@ export function createPlaywrightProjects() {
 }
 
 export function createPlaywrightConfig(configuration = {}) {
+  const isContinuousIntegration = process.env['CI'] === 'true';
+
   const {
+    failOnFlakyTests = isContinuousIntegration,
+    forbidOnly = isContinuousIntegration,
     projects = createPlaywrightProjects(),
-    retries = process.env['CI'] === 'true' ? 2 : 0,
+    respectGitIgnore = true,
+    retries = isContinuousIntegration ? 2 : 0,
+    testDir = './tests',
     timeout = defaultTimeout,
     use = {},
     webServer,
@@ -131,12 +137,17 @@ export function createPlaywrightConfig(configuration = {}) {
 
   return defineConfig({
     ...rest,
+    failOnFlakyTests,
+    forbidOnly,
     projects,
+    respectGitIgnore,
     retries,
+    testDir,
     timeout,
     use: {
       locale: 'en',
       screenshot: 'only-on-failure',
+      trace: 'retain-on-first-failure',
       ...use,
     },
     ...(webServer === undefined
@@ -168,7 +179,7 @@ export async function waitForIdle(page) {
     }
 
     await document.fonts.ready;
-    await Promise.all(images.map(async (image) => await image.decode()));
+    await Promise.all(images.map((image) => image.decode()));
     await new Promise((resolvePromise) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(resolvePromise);
@@ -179,6 +190,7 @@ export async function waitForIdle(page) {
 
 export async function assertAxe(page) {
   const { default: AxeBuilder } = await import('@axe-core/playwright');
+
   const results = await new AxeBuilder({ page })
     .withTags([
       'wcag2a',
