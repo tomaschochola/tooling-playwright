@@ -191,19 +191,7 @@ export async function waitForIdle(page) {
 export async function assertAxe(page) {
   const { default: AxeBuilder } = await import('@axe-core/playwright');
 
-  const results = await new AxeBuilder({ page })
-    .withTags([
-      'wcag2a',
-      'wcag2aa',
-      'wcag2aaa',
-      'wcag21a',
-      'wcag21aa',
-      'wcag22aa',
-      'best-practice',
-      'ACT',
-      'EN-301-549',
-    ])
-    .analyze();
+  const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice', 'ACT', 'EN-301-549']).analyze();
 
   expect(results.violations).toEqual([]);
 
