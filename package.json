@@ -21,10 +21,10 @@
   "description": "Shared Playwright configuration and utilities for browser and accessibility testing.",
   "devDependencies": {
     "@playwright/test": "^1.62.1",
-    "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#2.x",
-    "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#2.x",
-    "@tomaschochola/tooling-trimmer": "github:tomaschochola/tooling-trimmer#2.x",
-    "@tomaschochola/tooling-typescript": "github:tomaschochola/tooling-typescript#2.x"
+    "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#main",
+    "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#main",
+    "@tomaschochola/tooling-trimmer": "github:tomaschochola/tooling-trimmer#main",
+    "@tomaschochola/tooling-typescript": "github:tomaschochola/tooling-typescript#main"
   },
   "exports": {
     ".": {
@@ -65,5 +65,5 @@
   },
   "type": "module",
   "types": "./src/index.d.ts",
-  "version": "2.0.0"
+  "version": "0.0.0"
 }

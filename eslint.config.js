@@ -12,7 +12,6 @@
 
 import { ESLintConfigBuilder, filePatterns } from '@tomaschochola/tooling-eslint';
 
-const declarationFiles = filePatterns.allTypeScriptDeclarationFiles;
 const javascriptFiles = filePatterns.allJavaScriptFiles;
 const typescriptFiles = filePatterns.allTypeScriptFiles;
 
@@ -21,21 +20,8 @@ export default new ESLintConfigBuilder()
   .addBrowserGlobals()
   .addGitIgnoreFile(import.meta.url)
   .addJavaScriptRecommendedRules()
-  .addJavaScriptPolicyRules()
   .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })
-  .addTypeScriptStylisticTypeCheckedRules({ files: typescriptFiles })
   .enableTypeScriptProjectService({ files: typescriptFiles })
-  .addTypeScriptPolicyRules({ files: typescriptFiles })
-  .addRawConfig({
-    files: [...filePatterns.allConfigScriptFiles, ...declarationFiles],
-    rules: {
-      'no-restricted-exports': 'off',
-    },
-  })
   .disableTypeScriptTypeChecking({ files: javascriptFiles })
-  .addStylisticCustomizedRules()
-  .addStylisticPolicyRules()
-  .disableStylisticLegacyRules()
   .addSonarJsRecommendedRules()
-  .addSonarJsPolicyOverrides()
   .toConfig();
