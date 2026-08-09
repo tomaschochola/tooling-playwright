@@ -16,11 +16,12 @@
     }
   ],
   "dependencies": {
-    "@axe-core/playwright": "^4.12.1"
+    "@axe-core/playwright": "~4.12.1",
+    "axe-core": "~4.12.1"
   },
-  "description": "Shared Playwright configuration and utilities for browser and accessibility testing.",
+  "description": "Composable Playwright configuration, browser project matrices, deterministic page waits, and Axe accessibility assertions.",
   "devDependencies": {
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "1.62.1",
     "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#main",
     "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#main",
     "@tomaschochola/tooling-trimmer": "github:tomaschochola/tooling-trimmer#main",
@@ -56,7 +57,7 @@
   "main": "./src/index.js",
   "name": "@tomaschochola/tooling-playwright",
   "peerDependencies": {
-    "@playwright/test": "^1.62.1"
+    "@playwright/test": "1.62.1"
   },
   "private": true,
   "repository": {
