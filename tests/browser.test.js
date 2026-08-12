@@ -13,7 +13,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { chromium, firefox, webkit } from '@playwright/test';
-import { assertNoAxeViolations, assertPage, createPlaywrightProjects, navigateToPage, waitForPageReady } from '../src/index.js';
+import { assertNoAxeViolations, assertNoConsoleErrors, assertNoPageErrors, assertPage, createPlaywrightProjects, navigateToPage, waitForPageReady } from '../src/index.js';
 
 const browserTypes = { chromium, firefox, webkit };
 
@@ -122,6 +122,42 @@ test('reports an Axe violation from an inaccessible document', async () => {
       await page.setContent('<!doctype html><html lang="en"><head><title>Inaccessible document</title></head><body><main><h1>Inaccessible document</h1><button></button></main></body></html>');
 
       await assert.rejects(assertNoAxeViolations(page), /button-name/);
+    } finally {
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+  }
+});
+
+test('reports page and console errors independently', async () => {
+  const browser = await chromium.launch({ channel: 'chromium' });
+
+  try {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    try {
+      await assertNoPageErrors(page);
+      await assertNoConsoleErrors(page);
+
+      await page.evaluate(() => {
+        console.error('Expected console error.');
+      });
+
+      await assert.rejects(assertNoConsoleErrors(page), /Expected console error/);
+      await assertNoPageErrors(page);
+
+      await Promise.all([
+        page.waitForEvent('pageerror'),
+        page.evaluate(() => {
+          setTimeout(() => {
+            throw new Error('Expected page error.');
+          }, 0);
+        }),
+      ]);
+
+      await assert.rejects(assertNoPageErrors(page), /Expected page error/);
     } finally {
       await context.close();
     }

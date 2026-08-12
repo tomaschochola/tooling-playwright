@@ -35,7 +35,13 @@ export interface PageExpectation {
  */
 export declare function assertNoAxeViolations(page: Page): Promise<AxeResults>;
 
-/** Navigate to and assert the standard title, heading, resource, and accessibility contract of a page. */
+/** Assert that the page has not emitted a console message with error severity. */
+export declare function assertNoConsoleErrors(page: Page): Promise<void>;
+
+/** Assert that the page has not raised an unhandled JavaScript error. */
+export declare function assertNoPageErrors(page: Page): Promise<void>;
+
+/** Navigate to and assert the standard title, heading, resource, accessibility, and error-free contract of a page. */
 export declare function assertPage(page: Page, expectation: PageExpectation): Promise<void>;
 
 /** Apply the fleet defaults while preserving every explicitly supplied Playwright override. */

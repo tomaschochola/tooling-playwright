@@ -11,7 +11,7 @@
  */
 
 export { assertNoAxeViolations } from './accessibility.js';
-export { assertPage } from './assertions.js';
+export { assertNoConsoleErrors, assertNoPageErrors, assertPage } from './assertions.js';
 export { createPlaywrightConfig, createPlaywrightDesktopProjects, createPlaywrightPhoneProjects, createPlaywrightProjects, createPlaywrightTabletProjects } from './config.js';
 export {
   navigateToPage,

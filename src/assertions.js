@@ -14,6 +14,18 @@ import { expect } from '@playwright/test';
 import { assertNoAxeViolations } from './accessibility.js';
 import { navigateToPage } from './page.js';
 
+export async function assertNoConsoleErrors(page) {
+  const errors = (await page.consoleMessages()).filter((message) => message.type() === 'error');
+
+  expect(errors.map((message) => message.text())).toEqual([]);
+}
+
+export async function assertNoPageErrors(page) {
+  const errors = await page.pageErrors();
+
+  expect(errors.map((error) => error.message)).toEqual([]);
+}
+
 export async function assertPage(page, expectation) {
   await navigateToPage(page, expectation.url);
   await expect(page).toHaveTitle(expectation.title);
@@ -24,4 +36,6 @@ export async function assertPage(page, expectation) {
   await expect(heading).toHaveAccessibleName(expectation.heading);
   await expect(heading).toBeVisible();
   await assertNoAxeViolations(page);
+  await assertNoPageErrors(page);
+  await assertNoConsoleErrors(page);
 }
