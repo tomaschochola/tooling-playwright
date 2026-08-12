@@ -11,10 +11,22 @@
  */
 
 import type { AxeBuilder } from '@axe-core/playwright';
-import type { Page, PlaywrightTestConfig } from '@playwright/test';
+import type { Page, PlaywrightTestConfig, Response } from '@playwright/test';
 
 /** Results produced by the Axe accessibility engine. */
 export type AxeResults = Awaited<ReturnType<AxeBuilder['analyze']>>;
+
+/** Required expectations for a standard HTML page. */
+export interface PageExpectation {
+  /** Accessible name of the page's single visible level-one heading. */
+  readonly heading: string;
+
+  /** Exact document title. */
+  readonly title: string;
+
+  /** URL passed to Playwright navigation and required as the final URL. */
+  readonly url: string;
+}
 
 /**
  * Assert that Axe finds no violation among its available rules for a cumulative WCAG 2.2
@@ -22,6 +34,9 @@ export type AxeResults = Awaited<ReturnType<AxeBuilder['analyze']>>;
  * Automated results are not proof of conformance.
  */
 export declare function assertNoAxeViolations(page: Page): Promise<AxeResults>;
+
+/** Navigate to and assert the standard title, heading, resource, and accessibility contract of a page. */
+export declare function assertPage(page: Page, expectation: PageExpectation): Promise<void>;
 
 /** Apply the fleet defaults while preserving every explicitly supplied Playwright override. */
 export declare function createPlaywrightConfig(configuration?: PlaywrightTestConfig): PlaywrightTestConfig;
@@ -37,6 +52,9 @@ export declare function createPlaywrightProjects(): NonNullable<PlaywrightTestCo
 
 /** Create the default emulated tablet projects. */
 export declare function createPlaywrightTabletProjects(): NonNullable<PlaywrightTestConfig['projects']>;
+
+/** Navigate to an HTTP page, require a successful response and final URL, and wait for its resources. */
+export declare function navigateToPage(page: Page, url: string): Promise<Response>;
 
 /** Wait for the page's DOMContentLoaded lifecycle state. */
 export declare function waitForPageDomContentLoaded(page: Page): Promise<void>;

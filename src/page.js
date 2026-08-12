@@ -10,6 +10,8 @@
  * @see {@link https://github.com/sponsors/tomaschochola} GitHub Sponsors
  */
 
+import { expect } from '@playwright/test';
+
 async function waitForDocumentFonts() {
   await document.fonts.ready;
 }
@@ -81,4 +83,18 @@ export async function waitForPageReady(page) {
   await waitForPageLoad(page);
   await waitForPageNetworkIdle(page);
   await waitForPageResourcesAfterLoad(page);
+}
+
+export async function navigateToPage(page, url) {
+  const response = await page.goto(url);
+
+  if (response === null) {
+    throw new Error(`Navigation to "${url}" did not produce an HTTP response.`);
+  }
+
+  expect(response.ok(), `Navigation to "${url}" returned HTTP ${String(response.status())}.`).toBe(true);
+  await expect(page).toHaveURL(url);
+  await waitForPageResources(page);
+
+  return response;
 }

@@ -17,11 +17,13 @@ import * as tooling from '@tomaschochola/tooling-playwright';
 test('exposes only the supported root API', () => {
   assert.deepEqual(Object.keys(tooling).sort(), [
     'assertNoAxeViolations',
+    'assertPage',
     'createPlaywrightConfig',
     'createPlaywrightDesktopProjects',
     'createPlaywrightPhoneProjects',
     'createPlaywrightProjects',
     'createPlaywrightTabletProjects',
+    'navigateToPage',
     'waitForPageDomContentLoaded',
     'waitForPageFonts',
     'waitForPageImages',

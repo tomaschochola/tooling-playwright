@@ -13,7 +13,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { chromium, firefox, webkit } from '@playwright/test';
-import { assertNoAxeViolations, createPlaywrightProjects, waitForPageReady } from '../src/index.js';
+import { assertNoAxeViolations, assertPage, createPlaywrightProjects, navigateToPage, waitForPageReady } from '../src/index.js';
 
 const browserTypes = { chromium, firefox, webkit };
 
@@ -122,6 +122,49 @@ test('reports an Axe violation from an inaccessible document', async () => {
       await page.setContent('<!doctype html><html lang="en"><head><title>Inaccessible document</title></head><body><main><h1>Inaccessible document</h1><button></button></main></body></html>');
 
       await assert.rejects(assertNoAxeViolations(page), /button-name/);
+    } finally {
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+  }
+});
+
+test('navigates to and asserts the standard page contract', async () => {
+  const browser = await chromium.launch({ channel: 'chromium' });
+
+  try {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    try {
+      await page.route('https://example.test/', async (route) => {
+        await route.fulfill({
+          body: '<!doctype html><html lang="en"><head><title>Example page</title></head><body><main><h1>Example page</h1></main></body></html>',
+          contentType: 'text/html',
+          status: 200,
+        });
+      });
+
+      const response = await navigateToPage(page, 'https://example.test/');
+
+      assert.equal(response.status(), 200);
+
+      await assertPage(page, {
+        heading: 'Example page',
+        title: 'Example page',
+        url: 'https://example.test/',
+      });
+
+      await page.route('https://example.test/failure', async (route) => {
+        await route.fulfill({
+          body: 'Internal Server Error',
+          contentType: 'text/plain',
+          status: 500,
+        });
+      });
+
+      await assert.rejects(navigateToPage(page, 'https://example.test/failure'), /returned HTTP 500/);
     } finally {
       await context.close();
     }

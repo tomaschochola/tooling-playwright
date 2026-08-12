@@ -12,7 +12,19 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { waitForPageDomContentLoaded, waitForPageLoad, waitForPageNetworkIdle, waitForPageReady, waitForPageResources } from '../src/index.js';
+import { navigateToPage, waitForPageDomContentLoaded, waitForPageLoad, waitForPageNetworkIdle, waitForPageReady, waitForPageResources } from '../src/index.js';
+
+test('rejects navigation without an HTTP response', async () => {
+  await assert.rejects(
+    navigateToPage(
+      {
+        goto: async () => null,
+      },
+      '/same-document-navigation',
+    ),
+    /did not produce an HTTP response/,
+  );
+});
 
 test('exposes each Playwright lifecycle state as an independent wait', async () => {
   const loadStates = [];
