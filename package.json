@@ -19,7 +19,7 @@
     "@axe-core/playwright": "~4.12.1",
     "axe-core": "~4.12.1"
   },
-  "description": "Composable Playwright configuration, browser project matrices, deterministic page waits, and Axe accessibility assertions.",
+  "description": "Composable Playwright configuration, browser project matrices, deterministic page synchronization, and strict automated page assertions.",
   "devDependencies": {
     "@playwright/test": "1.62.1",
     "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#main",
