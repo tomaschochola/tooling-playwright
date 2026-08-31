@@ -18,26 +18,26 @@ export type AxeResults = Awaited<ReturnType<AxeBuilder['analyze']>>;
 
 /** Expected identity for the strict standard-page policy. */
 export interface PageExpectation {
-  /** Accessible name of the page's single visible level-one heading. */
-  readonly heading: string;
+    /** Accessible name of the page's single visible level-one heading. */
+    readonly heading: string;
 
-  /** Exact document title. */
-  readonly title: string;
+    /** Exact document title. */
+    readonly title: string;
 
-  /** URL passed to Playwright navigation and required as the final URL. */
-  readonly url: string;
+    /** URL passed to Playwright navigation and required as the final URL. */
+    readonly url: string;
 }
 
 /** Operational limits for vertical traversal of a finite document. */
 export interface PageTraversalOptions {
-  /** Positive safe-integer maximum of viewport scrolls before traversal fails safely. Defaults to 100. */
-  readonly maximumScrolls?: number;
+    /** Positive safe-integer maximum of viewport scrolls before traversal fails safely. Defaults to 100. */
+    readonly maximumScrolls?: number;
 }
 
 /** Optional application-specific synchronization for the strict page policy. */
 export interface PageAssertionOptions extends PageTraversalOptions {
-  /** Wait for application readiness after navigation and before the generic page scan. */
-  readonly waitForReady?: (page: Page) => Promise<void>;
+    /** Wait for application readiness after navigation and before the generic page scan. */
+    readonly waitForReady?: (page: Page) => Promise<void>;
 }
 
 /**

@@ -1,70 +1,70 @@
 {
-  "author": {
-    "email": "tomaschochola@tomaschochola.cz",
-    "name": "Tomáš Chochola",
-    "url": "https://github.com/tomaschochola"
-  },
-  "bugs": {
-    "email": "tomaschochola@tomaschochola.cz",
-    "url": "https://github.com/tomaschochola/tooling-playwright/issues"
-  },
-  "contributors": [
-    {
-      "email": "tomaschochola@tomaschochola.cz",
-      "name": "Tomáš Chochola",
-      "url": "https://github.com/tomaschochola"
-    }
-  ],
-  "dependencies": {
-    "@axe-core/playwright": "~4.12.1",
-    "axe-core": "~4.12.1"
-  },
-  "description": "Composable Playwright configuration, browser project matrices, deterministic page synchronization, and strict automated page assertions.",
-  "devDependencies": {
-    "@playwright/test": "1.62.1",
-    "@tomaschochola/tooling-eslint": "github:tomaschochola/tooling-eslint#main",
-    "@tomaschochola/tooling-prettier": "github:tomaschochola/tooling-prettier#main",
-    "@tomaschochola/tooling-trimmer": "github:tomaschochola/tooling-trimmer#main",
-    "@tomaschochola/tooling-typescript": "github:tomaschochola/tooling-typescript#main"
-  },
-  "exports": {
-    ".": {
-      "types": "./src/index.d.ts",
-      "default": "./src/index.js"
-    }
-  },
-  "files": [
-    "src"
-  ],
-  "funding": {
-    "type": "github",
-    "url": "https://github.com/sponsors/tomaschochola"
-  },
-  "homepage": "https://github.com/tomaschochola/tooling-playwright",
-  "keywords": [
-    "tomaschochola",
-    "TomasChochola",
-    "Tomas Chochola",
-    "Tomáš Chochola",
-    "accessibility",
-    "browser-testing",
-    "configuration",
-    "end-to-end-testing",
-    "playwright",
-    "tooling-playwright"
-  ],
-  "license": "CC-BY-ND-4.0",
-  "main": "./src/index.js",
-  "name": "@tomaschochola/tooling-playwright",
-  "peerDependencies": {
-    "@playwright/test": "1.62.1"
-  },
-  "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tomaschochola/tooling-playwright.git"
-  },
-  "type": "module",
-  "types": "./src/index.d.ts",
-  "version": "0.0.0"
+    "author": {
+        "email": "tomaschochola@tomaschochola.cz",
+        "name": "Tomáš Chochola",
+        "url": "https://github.com/tomaschochola"
+    },
+    "bugs": {
+        "email": "tomaschochola@tomaschochola.cz",
+        "url": "https://github.com/tomaschochola/tooling-playwright/issues"
+    },
+    "contributors": [
+        {
+            "email": "tomaschochola@tomaschochola.cz",
+            "name": "Tomáš Chochola",
+            "url": "https://github.com/tomaschochola"
+        }
+    ],
+    "dependencies": {
+        "@axe-core/playwright": "~4.12.1",
+        "axe-core": "~4.12.1"
+    },
+    "description": "Composable Playwright configuration, browser project matrices, deterministic page synchronization, and strict automated page assertions.",
+    "devDependencies": {
+        "@playwright/test": "1.62.1",
+        "@tomaschochola/tooling-eslint": "git+https://github.com/tomaschochola/tooling-eslint.git#main",
+        "@tomaschochola/tooling-prettier": "git+https://github.com/tomaschochola/tooling-prettier.git#main",
+        "@tomaschochola/tooling-trimmer": "git+https://github.com/tomaschochola/tooling-trimmer.git#main",
+        "@tomaschochola/tooling-typescript": "git+https://github.com/tomaschochola/tooling-typescript.git#main"
+    },
+    "exports": {
+        ".": {
+            "types": "./src/index.d.ts",
+            "default": "./src/index.js"
+        }
+    },
+    "files": [
+        "src"
+    ],
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/tomaschochola"
+    },
+    "homepage": "https://github.com/tomaschochola/tooling-playwright",
+    "keywords": [
+        "tomaschochola",
+        "TomasChochola",
+        "Tomas Chochola",
+        "Tomáš Chochola",
+        "accessibility",
+        "browser-testing",
+        "configuration",
+        "end-to-end-testing",
+        "playwright",
+        "tooling-playwright"
+    ],
+    "license": "CC-BY-ND-4.0",
+    "main": "./src/index.js",
+    "name": "@tomaschochola/tooling-playwright",
+    "peerDependencies": {
+        "@playwright/test": "1.62.1"
+    },
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tomaschochola/tooling-playwright.git"
+    },
+    "type": "module",
+    "types": "./src/index.d.ts",
+    "version": "0.0.0"
 }

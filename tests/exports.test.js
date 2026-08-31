@@ -15,32 +15,32 @@ import test from 'node:test';
 import * as tooling from '@tomaschochola/tooling-playwright';
 
 test('exposes only the supported root API', () => {
-  assert.deepEqual(Object.keys(tooling).sort(), [
-    'assertNoAxeViolations',
-    'assertNoConsoleErrors',
-    'assertNoPageErrors',
-    'assertPage',
-    'assertPageStandardsMode',
-    'assertValidIds',
-    'createPlaywrightConfig',
-    'createPlaywrightDesktopProjects',
-    'createPlaywrightPhoneProjects',
-    'createPlaywrightProjects',
-    'createPlaywrightTabletProjects',
-    'navigateToPage',
-    'scrollThroughPage',
-    'waitForPageDomContentLoaded',
-    'waitForPageFonts',
-    'waitForPageImages',
-    'waitForPageLoad',
-    'waitForPageNetworkIdle',
-    'waitForPageRendering',
-    'waitForPageResources',
-  ]);
+    assert.deepEqual(Object.keys(tooling).sort(), [
+        'assertNoAxeViolations',
+        'assertNoConsoleErrors',
+        'assertNoPageErrors',
+        'assertPage',
+        'assertPageStandardsMode',
+        'assertValidIds',
+        'createPlaywrightConfig',
+        'createPlaywrightDesktopProjects',
+        'createPlaywrightPhoneProjects',
+        'createPlaywrightProjects',
+        'createPlaywrightTabletProjects',
+        'navigateToPage',
+        'scrollThroughPage',
+        'waitForPageDomContentLoaded',
+        'waitForPageFonts',
+        'waitForPageImages',
+        'waitForPageLoad',
+        'waitForPageNetworkIdle',
+        'waitForPageRendering',
+        'waitForPageResources',
+    ]);
 });
 
 test('keeps implementation modules private', async () => {
-  await assert.rejects(import('@tomaschochola/tooling-playwright/config'), {
-    code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
-  });
+    await assert.rejects(import('@tomaschochola/tooling-playwright/config'), {
+        code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
+    });
 });

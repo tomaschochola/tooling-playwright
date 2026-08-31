@@ -16,12 +16,12 @@ const javascriptFiles = filePatterns.allJavaScriptFiles;
 const typescriptFiles = filePatterns.allTypeScriptFiles;
 
 export default new ESLintConfigBuilder()
-  .addNodeGlobals()
-  .addBrowserGlobals()
-  .addGitIgnoreFile(import.meta.url)
-  .addJavaScriptRecommendedRules()
-  .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })
-  .enableTypeScriptProjectService({ files: typescriptFiles })
-  .disableTypeScriptTypeChecking({ files: javascriptFiles })
-  .addSonarJsRecommendedRules()
-  .toConfig();
+    .addNodeGlobals()
+    .addBrowserGlobals()
+    .addGitIgnoreFile(import.meta.url)
+    .addJavaScriptRecommendedRules()
+    .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })
+    .enableTypeScriptProjectService({ files: typescriptFiles })
+    .disableTypeScriptTypeChecking({ files: javascriptFiles })
+    .addSonarJsRecommendedRules()
+    .toConfig();
