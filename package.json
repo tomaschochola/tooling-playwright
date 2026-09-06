@@ -34,7 +34,8 @@
         }
     },
     "files": [
-        "src"
+        "src",
+        "templates"
     ],
     "funding": {
         "type": "github",

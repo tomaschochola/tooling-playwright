@@ -12,8 +12,8 @@
 
 import { ESLintConfigBuilder, filePatterns } from '@tomaschochola/tooling-eslint';
 
-const javascriptFiles = filePatterns.allJavaScriptFiles;
-const typescriptFiles = filePatterns.allTypeScriptFiles;
+const javascriptFiles = filePatterns.javascript;
+const typescriptFiles = filePatterns.typescript;
 
 export default new ESLintConfigBuilder()
     .addNodeGlobals({ files: ['*.js', 'src/{accessibility,assertions,config,index,page}.js', 'tests/**/*.js'] })
