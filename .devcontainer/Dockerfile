@@ -2,11 +2,6 @@
 
 FROM mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
 
-USER root
-
-RUN npx --yes playwright@1.62.1 install chrome msedge \
-    && rm -rf /root/.npm /var/lib/apt/lists/*
-
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get upgrade --yes --no-install-recommends \
     && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends make sudo \

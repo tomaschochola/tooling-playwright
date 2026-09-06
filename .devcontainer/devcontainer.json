@@ -1,8 +1,7 @@
 {
     "appPort": ["63060:63060", "127.0.0.1:63061-63062:63061-63062", "63063:63063", "127.0.0.1:63064-63069:63064-63069"],
     "build": {
-        "dockerfile": "Dockerfile",
-        "options": ["--platform=linux/amd64"]
+        "dockerfile": "Dockerfile"
     },
     "customizations": {
         "vscode": {
@@ -17,8 +16,9 @@
     "init": true,
     "postCreateCommand": ["make", "postcreate"],
     "remoteUser": "ubuntu",
-    "runArgs": ["--ipc=host", "--platform=linux/amd64"],
+    "runArgs": ["--ipc=host"],
     "updateRemoteUserUID": true,
+    "userEnvProbe": "none",
     "waitFor": "postCreateCommand",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}"
 }

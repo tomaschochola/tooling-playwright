@@ -12,29 +12,44 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { createPlaywrightConfig, createPlaywrightDesktopProjects, createPlaywrightPhoneProjects, createPlaywrightProjects, createPlaywrightTabletProjects } from '../src/index.js';
+import {
+    createPlaywrightBrandedDesktopProjects,
+    createPlaywrightConfig,
+    createPlaywrightDesktopProjects,
+    createPlaywrightPhoneProjects,
+    createPlaywrightProjects,
+    createPlaywrightTabletProjects,
+} from '../src/index.js';
 
-test('creates the complete browser and device matrix', () => {
+test('creates a portable default browser matrix and explicit opt-in project factories', () => {
+    const brandedDesktopProjects = createPlaywrightBrandedDesktopProjects();
     const desktopProjects = createPlaywrightDesktopProjects();
     const phoneProjects = createPlaywrightPhoneProjects();
     const tabletProjects = createPlaywrightTabletProjects();
     const projects = createPlaywrightProjects();
 
-    assert.equal(desktopProjects.length, 5);
+    assert.equal(brandedDesktopProjects.length, 2);
+    assert.equal(desktopProjects.length, 3);
     assert.equal(phoneProjects.length, 4);
     assert.equal(tabletProjects.length, 4);
-    assert.equal(projects.length, 13);
-    assert.equal(new Set(projects.map(({ name }) => name)).size, projects.length);
-    assert.deepEqual(projects, [...desktopProjects, ...phoneProjects, ...tabletProjects]);
+    assert.equal(projects.length, 3);
+    assert.equal(new Set([...projects, ...brandedDesktopProjects, ...phoneProjects, ...tabletProjects].map(({ name }) => name)).size, 13);
+    assert.deepEqual(projects, desktopProjects);
 
     assert.deepEqual(
         desktopProjects.map(({ use }) => [use?.browserName, use?.channel]),
         [
             ['chromium', 'chromium'],
-            ['chromium', 'chrome'],
-            ['chromium', 'msedge'],
             ['firefox', undefined],
             ['webkit', undefined],
+        ],
+    );
+
+    assert.deepEqual(
+        brandedDesktopProjects.map(({ use }) => [use?.browserName, use?.channel]),
+        [
+            ['chromium', 'chrome'],
+            ['chromium', 'msedge'],
         ],
     );
 
@@ -75,7 +90,7 @@ test('applies web server defaults without mutating caller input', () => {
         {
             command: 'first',
             port: 3000,
-            reuseExistingServer: false,
+            reuseExistingServer: !['true', '1'].includes(process.env['CI']),
             timeout: 300_000,
         },
         {
@@ -108,6 +123,7 @@ test('applies defaults without hiding Playwright overrides', () => {
         },
         webServer: {
             command: 'example',
+            reuseExistingServer: false,
             timeout: 4321,
             url: 'http://localhost:60000/ready',
         },
@@ -154,6 +170,14 @@ test('applies deterministic local and continuous integration policies', () => {
         assert.equal(localConfig.webServer, undefined);
         assert.equal(localConfig.workers, undefined);
 
+        const localWebServerConfig = createPlaywrightConfig({ webServer: { command: 'local', port: 3000 } });
+
+        assert.equal(localWebServerConfig.webServer?.reuseExistingServer, true);
+
+        const isolatedLocalConfig = createPlaywrightConfig({ webServer: { command: 'local', port: 3000, reuseExistingServer: false } });
+
+        assert.equal(isolatedLocalConfig.webServer?.reuseExistingServer, false);
+
         process.env['CI'] = 'true';
 
         const continuousIntegrationConfig = createPlaywrightConfig();
@@ -163,6 +187,22 @@ test('applies deterministic local and continuous integration policies', () => {
         assert.equal(continuousIntegrationConfig.retries, 2);
         assert.equal(continuousIntegrationConfig.retryStrategy, 'isolated');
         assert.equal(continuousIntegrationConfig.workers, 1);
+
+        const continuousIntegrationWebServerConfig = createPlaywrightConfig({ webServer: { command: 'continuous integration', port: 3000 } });
+
+        assert.equal(continuousIntegrationWebServerConfig.webServer?.reuseExistingServer, false);
+
+        const reusedContinuousIntegrationConfig = createPlaywrightConfig({ webServer: { command: 'continuous integration', port: 3000, reuseExistingServer: true } });
+
+        assert.equal(reusedContinuousIntegrationConfig.webServer?.reuseExistingServer, true);
+
+        process.env['CI'] = '1';
+        assert.deepEqual(createPlaywrightConfig(), continuousIntegrationConfig);
+
+        for (const value of ['', '0', 'false', 'TRUE', 'unexpected']) {
+            process.env['CI'] = value;
+            assert.deepEqual(createPlaywrightConfig(), localConfig);
+        }
     } finally {
         if (originalContinuousIntegration === undefined) {
             delete process.env['CI'];

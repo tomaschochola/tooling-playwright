@@ -16,8 +16,8 @@ const javascriptFiles = filePatterns.allJavaScriptFiles;
 const typescriptFiles = filePatterns.allTypeScriptFiles;
 
 export default new ESLintConfigBuilder()
-    .addNodeGlobals()
-    .addBrowserGlobals()
+    .addNodeGlobals({ files: ['*.js', 'src/{accessibility,assertions,config,index,page}.js', 'tests/**/*.js'] })
+    .addBrowserGlobals({ files: ['src/browser.js', 'tests/browser.test.js'] })
     .addGitIgnoreFile(import.meta.url)
     .addJavaScriptRecommendedRules()
     .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })

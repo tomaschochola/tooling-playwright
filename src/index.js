@@ -11,16 +11,13 @@
  */
 
 export { assertNoAxeViolations } from './accessibility.js';
-export { assertNoConsoleErrors, assertNoPageErrors, assertPage, assertPageStandardsMode, assertValidIds } from './assertions.js';
-export { createPlaywrightConfig, createPlaywrightDesktopProjects, createPlaywrightPhoneProjects, createPlaywrightProjects, createPlaywrightTabletProjects } from './config.js';
+export { assertNoConsoleErrors, assertNoPageErrors, assertPageStandardsMode, assertStandardPage, assertValidIds } from './assertions.js';
 export {
-    navigateToPage,
-    scrollThroughPage,
-    waitForPageDomContentLoaded,
-    waitForPageFonts,
-    waitForPageImages,
-    waitForPageLoad,
-    waitForPageNetworkIdle,
-    waitForPageRendering,
-    waitForPageResources,
-} from './page.js';
+    createPlaywrightBrandedDesktopProjects,
+    createPlaywrightConfig,
+    createPlaywrightDesktopProjects,
+    createPlaywrightPhoneProjects,
+    createPlaywrightProjects,
+    createPlaywrightTabletProjects,
+} from './config.js';
+export { navigateToPage, scrollThroughPage, waitForPageFonts, waitForPageImages, waitForPageRendering, waitForPageResources } from './page.js';

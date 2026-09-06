@@ -11,6 +11,7 @@
  */
 
 import { expect } from '@playwright/test';
+import { getDocumentScrollState, setDocumentScrollTop, waitForDocumentFonts, waitForDocumentImages, waitForDocumentRendering } from './browser.js';
 
 const defaultMaximumPageScrolls = 100;
 const pageEndTolerance = 1;
@@ -49,114 +50,6 @@ function getNextPageScroll(state, scrollCount, maximumScrolls) {
     };
 }
 
-function getDocumentScrollState() {
-    const scrollingElement = document.scrollingElement;
-
-    if (scrollingElement === null) {
-        throw new Error('The document does not have a scrolling element.');
-    }
-
-    return {
-        clientHeight: scrollingElement.clientHeight,
-        scrollHeight: scrollingElement.scrollHeight,
-        scrollTop: scrollingElement.scrollTop,
-    };
-}
-
-function setDocumentScrollTop(scrollTop) {
-    const scrollingElement = document.scrollingElement;
-
-    if (scrollingElement === null) {
-        throw new Error('The document does not have a scrolling element.');
-    }
-
-    scrollingElement.scrollTo({ behavior: 'instant', top: scrollTop });
-
-    return scrollingElement.scrollTop;
-}
-
-async function waitForDocumentFonts() {
-    await document.fonts.ready;
-
-    const failedFonts = [...document.fonts].filter((font) => font.status === 'error');
-
-    if (failedFonts.length > 0) {
-        throw new Error(`${String(failedFonts.length)} document font face(s) failed to load.`);
-    }
-}
-
-async function waitForDocumentImages() {
-    const images = [];
-    const roots = [document];
-
-    for (const root of roots) {
-        for (const element of root.querySelectorAll('*')) {
-            if (element instanceof HTMLImageElement) {
-                images.push(element);
-            }
-
-            if (element.shadowRoot !== null) {
-                roots.push(element.shadowRoot);
-            }
-        }
-    }
-
-    const imagesToDecode = new Set(images.filter((image) => image.loading !== 'lazy' || image.complete));
-    const deferredImages = images.filter((image) => image.loading === 'lazy' && !image.complete);
-
-    if (deferredImages.length > 0) {
-        await new Promise((resolvePromise) => {
-            const pendingImages = new Set(deferredImages);
-            const observer = new IntersectionObserver((entries) => {
-                for (const entry of entries) {
-                    pendingImages.delete(entry.target);
-
-                    if (entry.isIntersecting || entry.target.complete) {
-                        imagesToDecode.add(entry.target);
-                    }
-                }
-
-                if (pendingImages.size === 0) {
-                    observer.disconnect();
-                    resolvePromise();
-                }
-            });
-
-            for (const image of deferredImages) {
-                observer.observe(image);
-            }
-        });
-    }
-
-    const sourcedImages = [...imagesToDecode].filter((image) => image.currentSrc !== '' || image.src !== '' || image.srcset !== '');
-    const imageResults = await Promise.allSettled(sourcedImages.map(async (image) => await image.decode()));
-    const failedImageCount = imageResults.filter((result) => result.status === 'rejected').length;
-
-    if (failedImageCount > 0) {
-        throw new Error(`${String(failedImageCount)} document image(s) failed to decode.`);
-    }
-}
-
-async function waitForDocumentRendering() {
-    await new Promise((resolvePromise) => {
-        requestAnimationFrame(() => {
-            requestAnimationFrame(resolvePromise);
-        });
-    });
-}
-
-export async function waitForPageDomContentLoaded(page) {
-    await page.waitForLoadState('domcontentloaded');
-}
-
-export async function waitForPageLoad(page) {
-    await page.waitForLoadState('load');
-}
-
-export async function waitForPageNetworkIdle(page) {
-    await page.waitForLoadState('networkidle');
-}
-
 export async function waitForPageFonts(page) {
     await page.evaluate(waitForDocumentFonts);
 }
@@ -176,7 +69,7 @@ async function waitForPageResourcesAfterLoad(page) {
 }
 
 export async function waitForPageResources(page) {
-    await waitForPageLoad(page);
+    await page.waitForLoadState('load');
     await waitForPageResourcesAfterLoad(page);
 }
 
@@ -184,6 +77,7 @@ export async function scrollThroughPage(page, options = {}) {
     const maximumScrolls = getMaximumPageScrolls(options);
     const initialState = await page.evaluate(getDocumentScrollState);
     let scrollCount = 0;
+    const failures = [];
 
     try {
         await page.evaluate(setDocumentScrollTop, 0);
@@ -211,10 +105,24 @@ export async function scrollThroughPage(page, options = {}) {
 
             scrollCount += 1;
         }
-    } finally {
+    } catch (error) {
+        failures.push(error);
+    }
+
+    try {
         await page.evaluate(setDocumentScrollTop, initialState.scrollTop);
         await waitForPageImages(page);
         await waitForPageRendering(page);
+    } catch (error) {
+        failures.push(error);
+    }
+
+    if (failures.length === 1) {
+        throw failures[0];
+    }
+
+    if (failures.length > 1) {
+        throw new AggregateError(failures, 'Page traversal and scroll restoration both failed.');
     }
 }
 

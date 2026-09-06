@@ -14,9 +14,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 const webServerTimeout = 5 * 60 * 1000;
 
-function applyWebServerDefaults(webServer) {
+function applyWebServerDefaults(webServer, isContinuousIntegration) {
     const apply = (configuration) => ({
-        reuseExistingServer: false,
+        reuseExistingServer: !isContinuousIntegration,
         timeout: webServerTimeout,
         ...configuration,
     });
@@ -49,6 +49,31 @@ export function createPlaywrightDesktopProjects() {
             },
         },
         {
+            name: 'Firefox desktop landscape',
+            use: {
+                browserName: 'firefox',
+                viewport: {
+                    height: 1080,
+                    width: 1920,
+                },
+            },
+        },
+        {
+            name: 'WebKit desktop landscape',
+            use: {
+                browserName: 'webkit',
+                viewport: {
+                    height: 1080,
+                    width: 1920,
+                },
+            },
+        },
+    ];
+}
+
+export function createPlaywrightBrandedDesktopProjects() {
+    return [
+        {
             name: 'Google Chrome stable desktop landscape',
             use: {
                 browserName: 'chromium',
@@ -64,26 +89,6 @@ export function createPlaywrightDesktopProjects() {
             use: {
                 browserName: 'chromium',
                 channel: 'msedge',
-                viewport: {
-                    height: 1080,
-                    width: 1920,
-                },
-            },
-        },
-        {
-            name: 'Firefox desktop landscape',
-            use: {
-                browserName: 'firefox',
-                viewport: {
-                    height: 1080,
-                    width: 1920,
-                },
-            },
-        },
-        {
-            name: 'WebKit desktop landscape',
-            use: {
-                browserName: 'webkit',
                 viewport: {
                     height: 1080,
                     width: 1920,
@@ -156,11 +161,11 @@ export function createPlaywrightTabletProjects() {
 }
 
 export function createPlaywrightProjects() {
-    return [...createPlaywrightDesktopProjects(), ...createPlaywrightPhoneProjects(), ...createPlaywrightTabletProjects()];
+    return createPlaywrightDesktopProjects();
 }
 
 export function createPlaywrightConfig(configuration = {}) {
-    const isContinuousIntegration = process.env['CI'] === 'true';
+    const isContinuousIntegration = process.env['CI'] === 'true' || process.env['CI'] === '1';
 
     const {
         failOnFlakyTests = isContinuousIntegration,
@@ -195,7 +200,7 @@ export function createPlaywrightConfig(configuration = {}) {
         ...(webServer === undefined
             ? {}
             : {
-                  webServer: applyWebServerDefaults(webServer),
+                  webServer: applyWebServerDefaults(webServer, isContinuousIntegration),
               }),
         workers,
     });

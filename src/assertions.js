@@ -12,6 +12,7 @@
 
 import { expect } from '@playwright/test';
 import { assertNoAxeViolations } from './accessibility.js';
+import { getDocumentCompatibilityMode, getDocumentIdViolations } from './browser.js';
 import { navigateToPage, scrollThroughPage, waitForPageResources } from './page.js';
 
 const criticalResourceTypes = new Set(['document', 'font', 'image', 'manifest', 'script', 'stylesheet']);
@@ -20,56 +21,6 @@ const maximumFailureDetails = 200;
 function recordFailure(failures, failure) {
     failures.push(failure);
     failures.length = Math.min(failures.length, maximumFailureDetails);
-}
-
-function getDocumentCompatibilityMode() {
-    return document.compatMode;
-}
-
-function getDocumentIdViolations() {
-    const getIdViolation = (element, ids) => {
-        if (!element.hasAttribute('id')) {
-            return null;
-        }
-
-        const id = element.getAttribute('id');
-
-        if (id === '') {
-            return 'An id must contain at least one character.';
-        }
-
-        if (/[\t\n\f\r ]/u.test(id)) {
-            return `${JSON.stringify(id)} must not contain ASCII whitespace.`;
-        }
-
-        if (ids.has(id)) {
-            return `${JSON.stringify(id)} must be unique within its tree.`;
-        }
-
-        ids.add(id);
-
-        return null;
-    };
-    const idViolations = [];
-    const roots = [document];
-
-    for (const root of roots) {
-        const ids = new Set();
-
-        for (const element of root.querySelectorAll('*')) {
-            const idViolation = getIdViolation(element, ids);
-
-            if (idViolation !== null) {
-                idViolations.push(idViolation);
-            }
-
-            if (element.shadowRoot !== null) {
-                roots.push(element.shadowRoot);
-            }
-        }
-    }
-
-    return idViolations;
 }
 
 async function getConsoleErrorMessages(page) {
@@ -201,7 +152,7 @@ export async function assertPageStandardsMode(page) {
     expect(compatibilityMode, 'The page must render in standards mode.').toBe('CSS1Compat');
 }
 
-export async function assertPage(page, expectation, options = {}) {
+export async function assertStandardPage(page, expectation, options = {}) {
     const { waitForReady, ...traversalOptions } = options;
     const failures = observePageFailures(page);
 

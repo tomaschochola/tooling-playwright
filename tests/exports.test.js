@@ -19,9 +19,10 @@ test('exposes only the supported root API', () => {
         'assertNoAxeViolations',
         'assertNoConsoleErrors',
         'assertNoPageErrors',
-        'assertPage',
         'assertPageStandardsMode',
+        'assertStandardPage',
         'assertValidIds',
+        'createPlaywrightBrandedDesktopProjects',
         'createPlaywrightConfig',
         'createPlaywrightDesktopProjects',
         'createPlaywrightPhoneProjects',
@@ -29,18 +30,20 @@ test('exposes only the supported root API', () => {
         'createPlaywrightTabletProjects',
         'navigateToPage',
         'scrollThroughPage',
-        'waitForPageDomContentLoaded',
         'waitForPageFonts',
         'waitForPageImages',
-        'waitForPageLoad',
-        'waitForPageNetworkIdle',
         'waitForPageRendering',
         'waitForPageResources',
     ]);
 });
 
 test('keeps implementation modules private', async () => {
-    await assert.rejects(import('@tomaschochola/tooling-playwright/config'), {
-        code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
-    });
+    await Promise.all(
+        ['browser', 'config'].map(
+            async (moduleName) =>
+                await assert.rejects(import(`@tomaschochola/tooling-playwright/${moduleName}`), {
+                    code: 'ERR_PACKAGE_PATH_NOT_EXPORTED',
+                }),
+        ),
+    );
 });

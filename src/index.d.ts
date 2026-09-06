@@ -65,7 +65,7 @@ export declare function assertNoPageErrors(page: Page): Promise<void>;
  * pages, nested scrolling regions, additional interactive states, or pages that intentionally emit errors.
  * Automated assertions do not prove visual correctness or complete accessibility conformance.
  */
-export declare function assertPage(page: Page, expectation: PageExpectation, options?: PageAssertionOptions): Promise<void>;
+export declare function assertStandardPage(page: Page, expectation: PageExpectation, options?: PageAssertionOptions): Promise<void>;
 
 /** Assert that the document renders in standards mode rather than quirks mode. */
 export declare function assertPageStandardsMode(page: Page): Promise<void>;
@@ -73,16 +73,19 @@ export declare function assertPageStandardsMode(page: Page): Promise<void>;
 /** Assert that every id is non-empty, contains no ASCII whitespace, and is unique within its document or open shadow root. */
 export declare function assertValidIds(page: Page): Promise<void>;
 
-/** Apply the fleet defaults while preserving every explicitly supplied Playwright override. */
+/** Apply the fleet defaults while preserving explicit overrides. CI defaults apply only when CI is "true" or "1". */
 export declare function createPlaywrightConfig(configuration?: PlaywrightTestConfig): PlaywrightTestConfig;
 
 /** Create the default desktop browser projects. */
 export declare function createPlaywrightDesktopProjects(): NonNullable<PlaywrightTestConfig['projects']>;
 
+/** Create optional Google Chrome and Microsoft Edge desktop browser projects. */
+export declare function createPlaywrightBrandedDesktopProjects(): NonNullable<PlaywrightTestConfig['projects']>;
+
 /** Create the default emulated phone projects. */
 export declare function createPlaywrightPhoneProjects(): NonNullable<PlaywrightTestConfig['projects']>;
 
-/** Create the default desktop, phone, and tablet browser project matrix. */
+/** Create the default portable desktop browser project matrix. */
 export declare function createPlaywrightProjects(): NonNullable<PlaywrightTestConfig['projects']>;
 
 /** Create the default emulated tablet projects. */
@@ -91,23 +94,11 @@ export declare function createPlaywrightTabletProjects(): NonNullable<Playwright
 /** Navigate to an HTTP page and require a successful response and final URL. */
 export declare function navigateToPage(page: Page, url: string): Promise<Response>;
 
-/** Wait for the page's DOMContentLoaded lifecycle state. */
-export declare function waitForPageDomContentLoaded(page: Page): Promise<void>;
-
 /** Wait for document fonts to settle and reject when an attempted font face failed to load. */
 export declare function waitForPageFonts(page: Page): Promise<void>;
 
 /** Wait for eager, completed, and viewport-intersecting lazy light/open-shadow DOM images to decode without triggering deferred offscreen images. */
 export declare function waitForPageImages(page: Page): Promise<void>;
-
-/** Wait for the page's load lifecycle state. */
-export declare function waitForPageLoad(page: Page): Promise<void>;
-
-/**
- * Wait for Playwright's discouraged networkidle lifecycle state.
- * Use only when the tested page is intentionally known to become network-idle.
- */
-export declare function waitForPageNetworkIdle(page: Page): Promise<void>;
 
 /** Wait across two requestAnimationFrame callbacks, allowing a rendering opportunity between them. */
 export declare function waitForPageRendering(page: Page): Promise<void>;

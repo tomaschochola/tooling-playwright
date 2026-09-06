@@ -12,19 +12,7 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {
-    assertPageStandardsMode,
-    assertValidIds,
-    navigateToPage,
-    scrollThroughPage,
-    waitForPageDomContentLoaded,
-    waitForPageFonts,
-    waitForPageImages,
-    waitForPageLoad,
-    waitForPageNetworkIdle,
-    waitForPageRendering,
-    waitForPageResources,
-} from '../src/index.js';
+import { assertPageStandardsMode, assertValidIds, navigateToPage, scrollThroughPage, waitForPageFonts, waitForPageImages, waitForPageRendering, waitForPageResources } from '../src/index.js';
 
 test('rejects navigation without an HTTP response', async () => {
     await assert.rejects(
@@ -97,15 +85,11 @@ test('requires ids to be valid and unique within each document and shadow root',
     }
 });
 
-test('exposes exact Playwright lifecycle and rendering waits independently', async () => {
+test('waits across two rendering frames', async () => {
     const originalRequestAnimationFrame = globalThis.requestAnimationFrame;
-    const loadStates = [];
     let animationFrames = 0;
     const page = {
         evaluate: async (callback) => await callback(),
-        waitForLoadState: async (state) => {
-            loadStates.push(state);
-        },
     };
 
     try {
@@ -114,9 +98,6 @@ test('exposes exact Playwright lifecycle and rendering waits independently', asy
             callback();
         };
 
-        await waitForPageDomContentLoaded(page);
-        await waitForPageLoad(page);
-        await waitForPageNetworkIdle(page);
         await waitForPageRendering(page);
     } finally {
         if (originalRequestAnimationFrame === undefined) {
@@ -126,7 +107,6 @@ test('exposes exact Playwright lifecycle and rendering waits independently', asy
         }
     }
 
-    assert.deepEqual(loadStates, ['domcontentloaded', 'load', 'networkidle']);
     assert.equal(animationFrames, 2);
 });
 
@@ -479,7 +459,14 @@ test('restores page traversal when scrolling becomes unavailable', async () => {
                     return await callback(argument);
                 },
             }),
-            /does not have a scrolling element/,
+            (error) => {
+                assert.ok(error instanceof AggregateError);
+                assert.equal(error.errors.length, 2);
+                for (const failure of error.errors) {
+                    assert.match(failure.message, /does not have a scrolling element/);
+                }
+                return true;
+            },
         );
     } finally {
         if (originalDocument === undefined) {
@@ -552,4 +539,51 @@ test('bounds traversal of pages that do not have a finite end', async () => {
 test('rejects invalid page traversal limits', async () => {
     await assert.rejects(scrollThroughPage({}, { maximumScrolls: 0 }), /positive safe integer/);
     await assert.rejects(scrollThroughPage({}, { maximumScrolls: 1.5 }), /positive safe integer/);
+});
+
+test('preserves a restoration failure after successful traversal', async () => {
+    const failure = new Error('Restoration failed.');
+    let scrollRequests = 0;
+
+    await assert.rejects(
+        scrollThroughPage({
+            evaluate: async (callback) => {
+                if (callback.name === 'getDocumentScrollState') {
+                    return { clientHeight: 100, scrollHeight: 100, scrollTop: 0 };
+                }
+
+                if (callback.name === 'setDocumentScrollTop') {
+                    scrollRequests += 1;
+                    if (scrollRequests === 2) {
+                        throw failure;
+                    }
+                }
+            },
+        }),
+        (error) => error === failure,
+    );
+});
+
+test('preserves both failures in traversal and restoration order', async () => {
+    const traversalFailure = new Error('Traversal failed.');
+    const restorationFailure = new Error('Restoration failed.');
+    let scrollRequests = 0;
+
+    await assert.rejects(
+        scrollThroughPage({
+            evaluate: async (callback) => {
+                if (callback.name === 'getDocumentScrollState') {
+                    return { clientHeight: 100, scrollHeight: 200, scrollTop: 25 };
+                }
+
+                scrollRequests += 1;
+                throw scrollRequests === 1 ? traversalFailure : restorationFailure;
+            },
+        }),
+        (error) => {
+            assert.ok(error instanceof AggregateError);
+            assert.deepEqual(error.errors, [traversalFailure, restorationFailure]);
+            return true;
+        },
+    );
 });
