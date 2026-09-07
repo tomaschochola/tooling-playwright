@@ -12,16 +12,19 @@
 
 import { ESLintConfigBuilder, filePatterns } from '@tomaschochola/tooling-eslint';
 
-const javascriptFiles = filePatterns.javascript;
+const browserFiles = ['src/browser.js', 'tests/browser.test.js'];
+const nodeFiles = ['src/{accessibility,assertions,config,index,page}.js', 'tests/**/*.js'];
 const typescriptFiles = filePatterns.typescript;
 
 export default new ESLintConfigBuilder()
-    .addNodeGlobals({ files: ['*.js', 'src/{accessibility,assertions,config,index,page}.js', 'tests/**/*.js'] })
-    .addBrowserGlobals({ files: ['src/browser.js', 'tests/browser.test.js'] })
+    .addNodeGlobalsForConfigFiles()
+    .addNodeGlobals({ files: nodeFiles })
+    .addBrowserGlobals({ files: browserFiles })
     .addGitIgnoreFile(import.meta.url)
-    .addJavaScriptRecommendedRules()
-    .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })
+    .addJavaScriptRecommendedRules({ files: filePatterns.scripts })
+    .addTypeScriptRecommendedTypeCheckedRules({ files: typescriptFiles })
+    // .addTypeScriptStrictTypeCheckedRules({ files: typescriptFiles })
+    // .addTypeScriptOpinionatedTypeCheckedRules({ files: typescriptFiles })
     .enableTypeScriptProjectService({ files: typescriptFiles })
-    .disableTypeScriptTypeChecking({ files: javascriptFiles })
-    .addSonarJsRecommendedRules()
+    // .addSonarJsRecommendedRules({ files: filePatterns.scripts })
     .toConfig();

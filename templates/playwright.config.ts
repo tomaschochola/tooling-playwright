@@ -13,12 +13,13 @@ export default createPlaywrightConfig({
         // ...createPlaywrightPhoneProjects(),
         // ...createPlaywrightTabletProjects(),
     ],
-    testDir: './tests/e2e',
+    testDir: '.',
     use: {
         baseURL: 'http://127.0.0.1:3000',
     },
     // webServer: {
     //     command: 'make serve',
+    //     cwd: '../..',
     //     url: 'http://127.0.0.1:3000',
     // },
 });
