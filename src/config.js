@@ -71,33 +71,6 @@ export function createPlaywrightDesktopProjects() {
     ];
 }
 
-export function createPlaywrightBrandedDesktopProjects() {
-    return [
-        {
-            name: 'Google Chrome stable desktop landscape',
-            use: {
-                browserName: 'chromium',
-                channel: 'chrome',
-                viewport: {
-                    height: 1080,
-                    width: 1920,
-                },
-            },
-        },
-        {
-            name: 'Microsoft Edge stable desktop landscape',
-            use: {
-                browserName: 'chromium',
-                channel: 'msedge',
-                viewport: {
-                    height: 1080,
-                    width: 1920,
-                },
-            },
-        },
-    ];
-}
-
 export function createPlaywrightPhoneProjects() {
     return [
         {

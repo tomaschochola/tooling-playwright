@@ -79,9 +79,6 @@ export declare function createPlaywrightConfig(configuration?: PlaywrightTestCon
 /** Create the default desktop browser projects. */
 export declare function createPlaywrightDesktopProjects(): NonNullable<PlaywrightTestConfig['projects']>;
 
-/** Create optional Google Chrome and Microsoft Edge desktop browser projects. */
-export declare function createPlaywrightBrandedDesktopProjects(): NonNullable<PlaywrightTestConfig['projects']>;
-
 /** Create the default emulated phone projects. */
 export declare function createPlaywrightPhoneProjects(): NonNullable<PlaywrightTestConfig['projects']>;
 

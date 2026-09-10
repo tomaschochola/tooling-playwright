@@ -12,28 +12,19 @@
 
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {
-    createPlaywrightBrandedDesktopProjects,
-    createPlaywrightConfig,
-    createPlaywrightDesktopProjects,
-    createPlaywrightPhoneProjects,
-    createPlaywrightProjects,
-    createPlaywrightTabletProjects,
-} from '../src/index.js';
+import { createPlaywrightConfig, createPlaywrightDesktopProjects, createPlaywrightPhoneProjects, createPlaywrightProjects, createPlaywrightTabletProjects } from '../src/index.js';
 
 test('creates a portable default browser matrix and explicit opt-in project factories', () => {
-    const brandedDesktopProjects = createPlaywrightBrandedDesktopProjects();
     const desktopProjects = createPlaywrightDesktopProjects();
     const phoneProjects = createPlaywrightPhoneProjects();
     const tabletProjects = createPlaywrightTabletProjects();
     const projects = createPlaywrightProjects();
 
-    assert.equal(brandedDesktopProjects.length, 2);
     assert.equal(desktopProjects.length, 3);
     assert.equal(phoneProjects.length, 4);
     assert.equal(tabletProjects.length, 4);
     assert.equal(projects.length, 3);
-    assert.equal(new Set([...projects, ...brandedDesktopProjects, ...phoneProjects, ...tabletProjects].map(({ name }) => name)).size, 13);
+    assert.equal(new Set([...projects, ...phoneProjects, ...tabletProjects].map(({ name }) => name)).size, 11);
     assert.deepEqual(projects, desktopProjects);
 
     assert.deepEqual(
@@ -42,14 +33,6 @@ test('creates a portable default browser matrix and explicit opt-in project fact
             ['chromium', 'chromium'],
             ['firefox', undefined],
             ['webkit', undefined],
-        ],
-    );
-
-    assert.deepEqual(
-        brandedDesktopProjects.map(({ use }) => [use?.browserName, use?.channel]),
-        [
-            ['chromium', 'chrome'],
-            ['chromium', 'msedge'],
         ],
     );
 

@@ -22,7 +22,6 @@ test('exposes only the supported root API', () => {
         'assertPageStandardsMode',
         'assertStandardPage',
         'assertValidIds',
-        'createPlaywrightBrandedDesktopProjects',
         'createPlaywrightConfig',
         'createPlaywrightDesktopProjects',
         'createPlaywrightPhoneProjects',
