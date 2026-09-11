@@ -86,27 +86,27 @@ test('settles real browser resources and accepts an accessible document', async 
         await page.setContent(`
     <!doctype html>
     <html lang="en">
-      <head>
+        <head>
         <title>Accessible document</title>
-      </head>
-      <body>
+        </head>
+        <body>
         <main>
-          <h1>Accessible document</h1>
-          <img alt="A green square" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Cpath fill='green' d='M0 0h1v1H0z'/%3E%3C/svg%3E">
-          <browser-shadow></browser-shadow>
+            <h1>Accessible document</h1>
+            <img alt="A green square" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Cpath fill='green' d='M0 0h1v1H0z'/%3E%3C/svg%3E">
+            <browser-shadow></browser-shadow>
         </main>
         <script>
-          const host = document.querySelector('browser-shadow');
-          const root = host.attachShadow({ mode: 'open' });
-          const image = document.createElement('img');
+            const host = document.querySelector('browser-shadow');
+            const root = host.attachShadow({ mode: 'open' });
+            const image = document.createElement('img');
 
-          image.alt = 'A blue square';
-          image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Cpath fill='blue' d='M0 0h1v1H0z'/%3E%3C/svg%3E";
-          root.append(image);
+            image.alt = 'A blue square';
+            image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3Cpath fill='blue' d='M0 0h1v1H0z'/%3E%3C/svg%3E";
+            root.append(image);
         </script>
-      </body>
+        </body>
     </html>
-  `);
+    `);
 
         await waitForPageResources(page);
 
@@ -141,20 +141,20 @@ test('settles relevant resources without triggering deferred lazy images in ever
             const page = await browser.newPage({ viewport: { height: 600, width: 800 } });
 
             await page.setContent(`
-      <!doctype html>
-      <style>html { scroll-behavior: smooth; }</style>
-      <script>
-        globalThis.scrollEvents = 0;
-        addEventListener('scroll', () => {
-          globalThis.scrollEvents += 1;
-        });
-      </script>
-      <img id="eager" alt="Eager" loading="eager" src="${imageSource}#eager">
-      <img id="visible-lazy" alt="Visible lazy" loading="lazy" src="${imageSource}#visible-lazy">
-      <div style="height: 20000px"></div>
-      <img id="deferred-lazy" alt="Deferred lazy" loading="lazy" src="${imageSource}#deferred-lazy">
-      <img id="hidden-lazy" alt="Hidden lazy" loading="lazy" style="display: none" src="${imageSource}#hidden-lazy">
-      <img id="source-less" alt="Source-less placeholder">
+        <!doctype html>
+        <style>html { scroll-behavior: smooth; }</style>
+        <script>
+            globalThis.scrollEvents = 0;
+            addEventListener('scroll', () => {
+                globalThis.scrollEvents += 1;
+            });
+        </script>
+        <img id="eager" alt="Eager" loading="eager" src="${imageSource}#eager">
+        <img id="visible-lazy" alt="Visible lazy" loading="lazy" src="${imageSource}#visible-lazy">
+        <div style="height: 20000px"></div>
+        <img id="deferred-lazy" alt="Deferred lazy" loading="lazy" src="${imageSource}#deferred-lazy">
+        <img id="hidden-lazy" alt="Hidden lazy" loading="lazy" style="display: none" src="${imageSource}#hidden-lazy">
+        <img id="source-less" alt="Source-less placeholder">
     `);
 
             await waitForPageResources(page);
