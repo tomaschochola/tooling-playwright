@@ -48,11 +48,6 @@
         "TomasChochola",
         "Tomas Chochola",
         "Tomáš Chochola",
-        "accessibility",
-        "browser-testing",
-        "configuration",
-        "end-to-end-testing",
-        "playwright",
         "tooling-playwright"
     ],
     "license": "CC-BY-ND-4.0",
