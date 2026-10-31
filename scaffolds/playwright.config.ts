@@ -9,7 +9,7 @@ import {
 export default createPlaywrightConfig({
     projects: [
         ...createPlaywrightDesktopProjects(),
-        // ...createPlaywrightBrandedDesktopProjects(), // Requires Chrome and Edge installation.
+        // ...createPlaywrightBrandedDesktopProjects(),
         // ...createPlaywrightPhoneProjects(),
         // ...createPlaywrightTabletProjects(),
     ],
