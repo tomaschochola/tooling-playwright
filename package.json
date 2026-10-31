@@ -50,7 +50,7 @@
         "Tomáš Chochola",
         "tooling-playwright"
     ],
-    "license": "CC-BY-ND-4.0",
+    "license": "BSD-3-Clause",
     "main": "./src/index.js",
     "name": "@tomaschochola/tooling-playwright",
     "peerDependencies": {
