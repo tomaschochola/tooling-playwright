@@ -3,25 +3,7 @@ import test from 'node:test';
 import * as tooling from '@tomaschochola/tooling-playwright';
 
 test('exposes only the supported root API', () => {
-    assert.deepEqual(Object.keys(tooling).sort(), [
-        'assertNoAxeViolations',
-        'assertNoConsoleErrors',
-        'assertNoPageErrors',
-        'assertPageStandardsMode',
-        'assertStandardPage',
-        'assertValidIds',
-        'createPlaywrightConfig',
-        'createPlaywrightDesktopProjects',
-        'createPlaywrightPhoneProjects',
-        'createPlaywrightProjects',
-        'createPlaywrightTabletProjects',
-        'navigateToPage',
-        'scrollThroughPage',
-        'waitForPageFonts',
-        'waitForPageImages',
-        'waitForPageRendering',
-        'waitForPageResources',
-    ]);
+    assert.deepEqual(Object.keys(tooling).sort(), ['assertNoAxeViolations', 'assertNoConsoleErrors', 'assertNoPageErrors', 'assertPageStandardsMode', 'assertStandardPage', 'assertValidIds', 'createPlaywrightConfig', 'createPlaywrightDesktopProjects', 'createPlaywrightPhoneProjects', 'createPlaywrightProjects', 'createPlaywrightTabletProjects', 'navigateToPage', 'scrollThroughPage', 'waitForPageFonts', 'waitForPageImages', 'waitForPageRendering', 'waitForPageResources']);
 });
 
 test('keeps implementation modules private', async () => {

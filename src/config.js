@@ -128,19 +128,7 @@ export function createPlaywrightProjects() {
 export function createPlaywrightConfig(configuration = {}) {
     const isContinuousIntegration = process.env['CI'] === 'true' || process.env['CI'] === '1';
 
-    const {
-        failOnFlakyTests = isContinuousIntegration,
-        forbidOnly = isContinuousIntegration,
-        projects = createPlaywrightProjects(),
-        respectGitIgnore = true,
-        retries = isContinuousIntegration ? 2 : 0,
-        retryStrategy = isContinuousIntegration ? 'isolated' : 'immediate',
-        testDir = './tests',
-        use = {},
-        webServer,
-        workers = isContinuousIntegration ? 1 : undefined,
-        ...rest
-    } = configuration;
+    const { failOnFlakyTests = isContinuousIntegration, forbidOnly = isContinuousIntegration, projects = createPlaywrightProjects(), respectGitIgnore = true, retries = isContinuousIntegration ? 2 : 0, retryStrategy = isContinuousIntegration ? 'isolated' : 'immediate', testDir = './tests', use = {}, webServer, workers = isContinuousIntegration ? 1 : undefined, ...rest } = configuration;
 
     return defineConfig({
         ...rest,

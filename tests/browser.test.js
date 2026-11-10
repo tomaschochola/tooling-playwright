@@ -1,18 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { chromium, firefox, webkit } from '@playwright/test';
-import {
-    assertNoAxeViolations,
-    assertNoConsoleErrors,
-    assertNoPageErrors,
-    assertStandardPage,
-    createPlaywrightProjects,
-    createPlaywrightPhoneProjects,
-    createPlaywrightTabletProjects,
-    navigateToPage,
-    scrollThroughPage,
-    waitForPageResources,
-} from '../src/index.js';
+import { assertNoAxeViolations, assertNoConsoleErrors, assertNoPageErrors, assertStandardPage, createPlaywrightProjects, createPlaywrightPhoneProjects, createPlaywrightTabletProjects, navigateToPage, scrollThroughPage, waitForPageResources } from '../src/index.js';
 
 const browserTypes = { chromium, firefox, webkit };
 
@@ -147,16 +136,13 @@ test('settles relevant resources without triggering deferred lazy images in ever
 
             await waitForPageResources(page);
 
-            assert.deepEqual(
-                await page.locator('img').evaluateAll((images) => images.map((image) => ({ complete: image.complete, loading: image.getAttribute('loading'), naturalWidth: image.naturalWidth }))),
-                [
-                    { complete: true, loading: 'eager', naturalWidth: 10 },
-                    { complete: true, loading: 'lazy', naturalWidth: 10 },
-                    { complete: false, loading: 'lazy', naturalWidth: 0 },
-                    { complete: false, loading: 'lazy', naturalWidth: 0 },
-                    { complete: true, loading: null, naturalWidth: 0 },
-                ],
-            );
+            assert.deepEqual(await page.locator('img').evaluateAll((images) => images.map((image) => ({ complete: image.complete, loading: image.getAttribute('loading'), naturalWidth: image.naturalWidth }))), [
+                { complete: true, loading: 'eager', naturalWidth: 10 },
+                { complete: true, loading: 'lazy', naturalWidth: 10 },
+                { complete: false, loading: 'lazy', naturalWidth: 0 },
+                { complete: false, loading: 'lazy', naturalWidth: 0 },
+                { complete: true, loading: null, naturalWidth: 0 },
+            ]);
             assert.deepEqual(await page.evaluate(() => ({ scrollEvents: globalThis.scrollEvents, scrollY })), { scrollEvents: 0, scrollY: 0 });
 
             await scrollThroughPage(page);
@@ -545,9 +531,7 @@ test('enforces WCAG AAA and 2.2 rules that stock Axe leaves disabled', async (te
     const page = await context.newPage();
 
     try {
-        await page.setContent(
-            '<!doctype html><html lang="en"><head><title>Strict WCAG rules</title><style>a{display:inline-block;width:10px;height:10px;margin:0}</style></head><body style="background:#fff"><main><h1>Strict WCAG rules</h1><p style="color:#666">This text passes AA contrast but does not pass AAA contrast.</p><a href="#first" aria-label="First target"></a><a href="#second" aria-label="Second target"></a></main></body></html>',
-        );
+        await page.setContent('<!doctype html><html lang="en"><head><title>Strict WCAG rules</title><style>a{display:inline-block;width:10px;height:10px;margin:0}</style></head><body style="background:#fff"><main><h1>Strict WCAG rules</h1><p style="color:#666">This text passes AA contrast but does not pass AAA contrast.</p><a href="#first" aria-label="First target"></a><a href="#second" aria-label="Second target"></a></main></body></html>');
 
         await assert.rejects(assertNoAxeViolations(page), (error) => {
             assert.match(error.message, /color-contrast-enhanced/);
